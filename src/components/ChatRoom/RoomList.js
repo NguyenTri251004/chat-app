@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Collapse, Typography } from "antd";
 import styled from "styled-components";
 import { PlusSquareOutlined } from "@ant-design/icons";
+import { AppContext } from "../../Context/AppProvider";
 
 const PanelContentStyled = styled.div`
   .ant-collapse-header,
@@ -26,6 +27,8 @@ const LinkStyled = styled(Typography.Link)`
 `;
 
 export default function RoomList() {
+    const { rooms } = React.useContext(AppContext);
+    console.log(rooms);
   return (
     <Collapse
       ghost
@@ -40,9 +43,9 @@ export default function RoomList() {
           ),
           children: (
             <PanelContentStyled>
-              <LinkStyled>Room 1</LinkStyled>
-              <LinkStyled>Room 2</LinkStyled>
-              <LinkStyled>Room 3</LinkStyled>
+              {
+                rooms.map(room => <LinkStyled key={room.id}>{room.name}</LinkStyled> )
+              }
               <Button
                 type="text"
                 icon={<PlusSquareOutlined />}
