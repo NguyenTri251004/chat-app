@@ -1,19 +1,32 @@
-import React from "react";
-import { db } from "../../firebase/config";
-import { collection, onSnapshot } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
+import { db } from "../firebase/config";
+import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
 
-export const useFirestore = () => {
-  React.useEffect(() => {
-    const usersCollection = collection(db, "users"); // Lấy reference của collection "users"
+export const useFirestore = (collectionName, condition) => {
+  const [documents, setDocuments] = useState([]);
 
-    const unsubscribe = onSnapshot(usersCollection, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
+  useEffect(() => {
+    if (!collectionName) return;
+
+    let collectionRef = collection(db, collectionName);
+    let q = query(collectionRef, orderBy("createdAt"));
+
+    if (condition) {
+      if (!condition.compareValue || !condition.compareValue.length) return;
+
+      q = query(q, where(condition.fieldName, condition.operator, condition.compareValue));
+    }
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const docs = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-      console.log("User data:", data);
+      setDocuments(docs);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [collectionName, condition]);
+
+  return documents;
 };
