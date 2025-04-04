@@ -1,4 +1,4 @@
-import { Avatar, Button, Typography } from "antd";
+import { Avatar, Button, Typography } from 'antd';
 import React from "react";
 import styled from "styled-components";
 import { auth, db } from "../../firebase/config";
@@ -21,10 +21,9 @@ export default function UserInfo() {
   const { user: {
     displayName,
     photoURL,
-
   } }= React.useContext(AuthContext);
-
   return (
+    
     <WrapperStyled>
       <div>
         <Avatar src={photoURL}>{photoURL ? '' : displayName?.charAt(0)?.toUpperCase()}</Avatar>

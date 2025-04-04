@@ -27,8 +27,11 @@ const LinkStyled = styled(Typography.Link)`
 `;
 
 export default function RoomList() {
-    const { rooms } = React.useContext(AppContext);
+    const { rooms, setIsAddRoomVisible, setSelectedRoomId } = React.useContext(AppContext);
     console.log(rooms);
+    const handleAddRoom = () => {
+      setIsAddRoomVisible(true);
+    }
   return (
     <Collapse
       ghost
@@ -44,12 +47,13 @@ export default function RoomList() {
           children: (
             <PanelContentStyled>
               {
-                rooms.map(room => <LinkStyled key={room.id}>{room.name}</LinkStyled> )
+                rooms.map(room => <LinkStyled key={room.id} onClick={() => setSelectedRoomId(room.id)}>{room.name}</LinkStyled> )
               }
               <Button
                 type="text"
                 icon={<PlusSquareOutlined />}
                 className="add-room"
+                onClick={handleAddRoom}
               >
                 {" "}
                 Thêm phòng{" "}

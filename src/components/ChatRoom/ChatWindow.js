@@ -1,8 +1,9 @@
 import { UserAddOutlined } from "@ant-design/icons";
 import { Avatar, Button, Tooltip, Form, Input } from "antd";
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import Message from "./Message";
+import { AppContext } from "../../Context/AppProvider";
 
 const HeaderStyled = styled.div`
   display: flex;
@@ -63,31 +64,39 @@ const ButtonGroupStyled = styled.div`
   align-items: center;
 `;
 export default function ChatWindow() {
+  const { selectedRoom, members } = useContext(AppContext);
+  console.log(members);
   return (
     <WrapperStyled>
       <HeaderStyled>
-        <div className="header__info">
-          <p className="header__title">Room 1</p>
-          <span className="header__description">Day la room 1</span>
-        </div>
+        {selectedRoom ? (
+          <div className="header__info">
+            <p className="header__title">{selectedRoom.name}</p>
+            <span className="header__description">
+              {selectedRoom.description}
+            </span>
+          </div>
+        ) : (
+          <p style={{ padding: "10px", fontStyle: "italic" }}>
+            Chưa chọn phòng nào
+          </p>
+        )}
+
         <ButtonGroupStyled>
           <Button icon={<UserAddOutlined />} type="text">
             {" "}
             Mời{" "}
           </Button>
           <Avatar.Group size="small" max={{ count: 2 }}>
-            <Tooltip title="A">
-              <Avatar>A</Avatar>
-            </Tooltip>
-            <Tooltip title="B">
-              <Avatar>B</Avatar>
-            </Tooltip>
-            <Tooltip title="C">
-              <Avatar>C</Avatar>
-            </Tooltip>
-            <Tooltip title="D">
-              <Avatar>D</Avatar>
-            </Tooltip>
+            {members?.map((member) => (
+              <Tooltip title={member.displayName} key={member.id}>
+                <Avatar src={member.photoURL}>
+                  {member.photoURL
+                    ? ""
+                    : member.displayName?.charAt(0)?.toUpperCase()}
+                </Avatar>
+              </Tooltip>
+            ))}
           </Avatar.Group>
         </ButtonGroupStyled>
       </HeaderStyled>
